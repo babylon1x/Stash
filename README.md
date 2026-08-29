@@ -6,7 +6,7 @@ A lightweight desktop web app for organizing public X posts into personal catego
 
 People who do not have X Premium cannot organize their X bookmarks into categories. Stash gives them a simple personal place to save public X posts into custom categories so they can find those posts later.
 
-Stash does not retrieve or store post content. It stores only the post URL and uses X's official website embed mechanism to render each post. Everything lives in the user's browser — no backend, no account, and no data leaves the device.
+Stash does not retrieve or store post content. It stores only the post URL and uses X's official website embed mechanism to render each post. Everything lives in the user's browser; no backend, no account, and no data leaves the device.
 
 ## Features Implemented
 
@@ -127,4 +127,4 @@ Stash is built as a focused desktop utility, not a social network. The interface
 
 ## License
 
-MIT License (or add your preferred license here.)
+MIT License.
