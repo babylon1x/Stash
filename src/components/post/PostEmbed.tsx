@@ -1,25 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ExternalLink, AlertCircle, Trash2 } from 'lucide-react';
+import { getTwitterWidgets } from '../../utils/widgetLoader';
 
 interface PostEmbedProps {
   url: string;
   tweetId: string;
   onDelete: () => void;
-}
-
-declare global {
-  interface Window {
-    twttr?: {
-      widgets?: {
-        createTweet?: (
-          tweetId: string,
-          element: HTMLElement,
-          options?: Record<string, unknown>
-        ) => Promise<HTMLElement | null>;
-        load?: (element?: HTMLElement) => void;
-      };
-    };
-  }
 }
 
 export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) => {
@@ -32,36 +18,21 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
 
     const renderEmbed = async () => {
       if (!containerRef.current) return;
-      containerRef.current.innerHTML = '';
-      setLoadStatus('loading');
 
-      // Helper to check for window.twttr availability
-      const waitForTwttr = async (maxAttempts = 20): Promise<boolean> => {
-        for (let i = 0; i < maxAttempts; i++) {
-          if (window.twttr?.widgets?.createTweet) return true;
-          await new Promise((res) => setTimeout(res, 250));
-        }
-        return false;
-      };
-
-      const hasTwttr = await waitForTwttr();
-
-      if (!isMounted) return;
-
-      if (!hasTwttr || !window.twttr?.widgets?.createTweet) {
-        setLoadStatus('failed');
-        return;
-      }
+      const container = containerRef.current;
+      container.innerHTML = '';
 
       try {
-        // Set fallback timeout in case widget rendering hangs
         timeoutId = setTimeout(() => {
           if (isMounted) {
             setLoadStatus((prev) => (prev === 'loading' ? 'failed' : prev));
           }
         }, 8000);
 
-        const el = await window.twttr.widgets.createTweet(tweetId, containerRef.current, {
+        const twttr = await getTwitterWidgets();
+        if (!isMounted) return;
+
+        const el = await twttr.widgets.createTweet(tweetId, container, {
           theme: 'dark',
           dnt: true,
           align: 'center',
@@ -120,6 +91,11 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
 
       {/* Embed Container & States */}
       <div className="p-2 min-h-[140px] flex items-center justify-center relative">
+        <div
+          ref={containerRef}
+          className={`w-full flex justify-center ${loadStatus !== 'success' ? 'min-h-[140px]' : ''}`}
+        />
+
         {loadStatus === 'loading' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-slate-900/50 text-slate-400 gap-2">
             <div className="w-5 h-5 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
@@ -127,15 +103,10 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
           </div>
         )}
 
-        <div
-          ref={containerRef}
-          className={`w-full flex justify-center ${loadStatus !== 'success' ? 'hidden' : 'block'}`}
-        />
-
         {loadStatus === 'failed' && (
-          <div className="p-6 text-center flex flex-col items-center justify-center gap-3 text-slate-400">
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-slate-900/50 text-slate-400 gap-2">
             <AlertCircle className="w-8 h-8 text-amber-400/80" />
-            <div className="space-y-1">
+            <div className="space-y-1 text-center">
               <p className="text-sm font-medium text-slate-200">X post could not load</p>
               <p className="text-xs text-slate-400">Post may be private, deleted, or blocked by browser extensions.</p>
             </div>
