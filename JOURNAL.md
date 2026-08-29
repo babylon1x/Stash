@@ -1,6 +1,6 @@
 # Stash Development Journal
 
-A chronological record of all decisions, workflows, challenges, and solutions during the construction of Stash — told from the prompter's perspective.
+A chronological record of all decisions, workflows, challenges, and solutions during the building of Stash.
 
 ---
 
@@ -8,8 +8,7 @@ A chronological record of all decisions, workflows, challenges, and solutions du
 
 ### Source Document
 
-I instructed the agent via a Markdown specification file located at:
-`C:\Users\emman\Downloads\Build Stash, a Simple X Bookmark Organizer.md`
+I instructed the agent via a Markdown specification file located at a folder in my computer.
 
 The specification contained 29 sections defining a strict MVP for a desktop-only web app called **Stash**.
 
