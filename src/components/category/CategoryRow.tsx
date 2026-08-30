@@ -57,7 +57,7 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
       {/* Posts Horizontal Scrolling Row */}
       {posts.length > 0 ? (
         <div className="relative group">
-          <div className="flex gap-4 overflow-x-auto pb-4 pt-1 px-1 custom-scrollbar scroll-smooth">
+          <div className="flex items-start gap-4 overflow-x-auto pb-4 pt-1 px-1 custom-scrollbar scroll-smooth">
             {posts.map((post) => (
               <PostEmbed
                 key={post.id}

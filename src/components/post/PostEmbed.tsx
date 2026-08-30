@@ -64,7 +64,7 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
   }, [tweetId]);
 
   return (
-    <div className="group relative w-[340px] max-w-[340px] flex-shrink-0 bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-md flex flex-col justify-between hover:border-slate-700 transition-colors">
+    <div className="group relative w-[340px] max-w-[340px] flex-shrink-0 bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden shadow-md flex flex-col hover:border-slate-700 transition-colors">
       {/* Top action bar overlay */}
       <div className="p-2.5 flex items-center justify-between bg-slate-900/90 border-b border-slate-800/60 z-10">
         <a
@@ -90,7 +90,7 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
       </div>
 
       {/* Embed Container & States */}
-      <div className="p-2 min-h-[140px] flex items-center justify-center relative">
+      <div className="p-2 flex items-start justify-center relative">
         <div
           ref={containerRef}
           className={`w-full flex justify-center ${loadStatus !== 'success' ? 'min-h-[140px]' : ''}`}
