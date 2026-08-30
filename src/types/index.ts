@@ -10,6 +10,9 @@ export interface Post {
   url: string;
   tweetId: string;
   createdAt: number;
+  username?: string;
+  author?: string;
+  searchText?: string;
 }
 
 export interface StashState {

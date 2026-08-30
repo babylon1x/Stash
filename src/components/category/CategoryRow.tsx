@@ -10,6 +10,7 @@ interface CategoryRowProps {
   onDeleteCategoryClick: (category: Category) => void;
   onAddPostClick: (category: Category) => void;
   onDeletePostClick: (postId: string) => void;
+  onMetadataExtracted?: (postId: string, metadata: { author?: string; searchText?: string }) => void;
 }
 
 export const CategoryRow: React.FC<CategoryRowProps> = ({
@@ -19,6 +20,7 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
   onDeleteCategoryClick,
   onAddPostClick,
   onDeletePostClick,
+  onMetadataExtracted,
 }) => {
   return (
     <section className="w-full bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 md:p-6 mb-8 shadow-sm transition-all hover:border-slate-800">
@@ -64,6 +66,7 @@ export const CategoryRow: React.FC<CategoryRowProps> = ({
                 url={post.url}
                 tweetId={post.tweetId}
                 onDelete={() => onDeletePostClick(post.id)}
+                onMetadataExtracted={(metadata) => onMetadataExtracted?.(post.id, metadata)}
               />
             ))}
           </div>

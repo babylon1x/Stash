@@ -6,11 +6,17 @@ interface PostEmbedProps {
   url: string;
   tweetId: string;
   onDelete: () => void;
+  onMetadataExtracted?: (metadata: { author?: string; searchText?: string }) => void;
 }
 
-export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) => {
+export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete, onMetadataExtracted }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loadStatus, setLoadStatus] = useState<'loading' | 'success' | 'failed'>('loading');
+
+  const onMetadataExtractedRef = useRef(onMetadataExtracted);
+  useEffect(() => {
+    onMetadataExtractedRef.current = onMetadataExtracted;
+  }, [onMetadataExtracted]);
 
   useEffect(() => {
     let isMounted = true;
@@ -20,6 +26,7 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
       if (!containerRef.current) return;
 
       const container = containerRef.current;
+
       container.innerHTML = '';
 
       try {
@@ -45,6 +52,17 @@ export const PostEmbed: React.FC<PostEmbedProps> = ({ url, tweetId, onDelete }) 
 
         if (el) {
           setLoadStatus('success');
+          if (onMetadataExtractedRef.current) {
+            const raw = el.getAttribute('title') || el.textContent || '';
+            const title = raw.trim();
+            const titleMatch = title.match(/post by @([a-zA-Z0-9_]+)/i);
+            const author = titleMatch ? `@${titleMatch[1]}` : '';
+            const cleanedText = el.textContent
+              ? el.textContent.replace(/\s+/g, ' ').trim()
+              : '';
+            const searchText = [author, cleanedText].filter(Boolean).join(' ').trim();
+            onMetadataExtractedRef.current({ author, searchText });
+          }
         } else {
           setLoadStatus('failed');
         }

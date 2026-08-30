@@ -1,4 +1,5 @@
 import type { Category, Post, StashState } from '../types';
+import { extractUsernameFromUrl } from '../utils/search';
 
 const STORAGE_KEY = 'stash_app_v1_data';
 
@@ -71,6 +72,7 @@ export const storageService = {
       url,
       tweetId,
       createdAt: Date.now(),
+      username: extractUsernameFromUrl(url),
     };
     const nextState = {
       ...state,
@@ -78,6 +80,21 @@ export const storageService = {
     };
     this.saveState(nextState);
     return { state: nextState, post: newPost };
+  },
+
+  updatePostMetadata(
+    state: StashState,
+    postId: string,
+    metadata: { author?: string; searchText?: string }
+  ): StashState {
+    const nextState = {
+      ...state,
+      posts: state.posts.map((post) =>
+        post.id === postId ? { ...post, ...metadata } : post
+      ),
+    };
+    this.saveState(nextState);
+    return nextState;
   },
 
   deletePost(state: StashState, postId: string): StashState {
