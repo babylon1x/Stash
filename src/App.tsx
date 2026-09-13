@@ -121,7 +121,7 @@ export const App: React.FC = () => {
 
       return { category, posts };
     })
-    .filter(({ posts }) => posts.length > 0);
+    .filter(({ posts }) => !isSearching || posts.length > 0);
 
   const totalMatchCount = filtered.reduce((sum, { posts }) => sum + posts.length, 0);
 
